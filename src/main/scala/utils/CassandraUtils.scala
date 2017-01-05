@@ -32,7 +32,6 @@ object CassandraUtils {
 
   def createCassandraIPList(hosts: List[String]): ArrayBuffer[InetAddress] =
     {
-
       var casIPList = ArrayBuffer[InetAddress]()
       for (casIP <- hosts)
         casIPList += InetAddress.getByName(casIP.asInstanceOf[String])

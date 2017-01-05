@@ -21,12 +21,36 @@ shipment_type text,
 PRIMARY KEY ((year, month, day, hour), event_id)
 );
 
-CREATE TABLE web_events_analysis.locations_per_hour_batch (
+CREATE TABLE web_events_analysis.events_per_location_per_hour_batch (
 year int,
 month int,
 day int,
 hour int,
 location text,
 count bigint,
-PRIMARY KEY ((year, month, day, hour), location)
+PRIMARY KEY (year, month, day, hour, location)
+);
+
+CREATE TABLE web_events_analysis.events_per_location_per_day_batch (
+year int,
+month int,
+day int,
+location text,
+count bigint,
+PRIMARY KEY (year, month, day, location)
+);
+
+CREATE TABLE web_events_analysis.events_per_location_per_month_batch (
+year int,
+month int,
+location text,
+count bigint,
+PRIMARY KEY (year, month, location)
+);
+
+CREATE TABLE web_events_analysis.events_per_location_per_year_batch (
+year int,
+location text,
+count bigint,
+PRIMARY KEY (year, location)
 );

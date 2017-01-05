@@ -28,7 +28,7 @@ class RawDataConsumer {
   val consumer = new KafkaConsumer[String, String](props)
   var executor: ExecutorService = null
 
-  InitializeApplication.connectToCassandra()
+  InitializeApplication.connectCassandra()
 
   def shutdown() = {
     if (consumer != null)

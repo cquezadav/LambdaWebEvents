@@ -1,45 +1,28 @@
 package config
 
-import scala.collection.JavaConversions
+import java.net.InetAddress
+
 import scala.collection.JavaConversions.asScalaBuffer
 
-import processor.DatabaseOperations
 import utils.CassandraUtils
-import com.datastax.driver.core.utils.UUIDs
-import java.net.InetAddress
+import utils.SparkUtils
 
 object InitializeApplication {
 
-  private val nodes = ApplicationSettings.CassandraConfig.cassandraNodes
-  private val inets = nodes.map(InetAddress.getByName).toList
-  private val port = 9042
-  
-  def connectToCassandra() = {
-    CassandraUtils.connect(inets, port)
-  }
-  
-  def demo() = {
-    try {
+  private val cassandraNodes = ApplicationSettings.CassandraConfig.cassandraNodes
+  private val cassandraInets = cassandraNodes.map(InetAddress.getByName).toList
+  private val cassandraPort = 9042
 
-      val cql = "select * from system.schema_keyspaces ;"
-      val resultSet = CassandraUtils.getSession().execute(cql)
-      val itr = JavaConversions.asScalaIterator(resultSet.iterator)
-      itr.foreach(row => {
-        val keyspace_name = row.getString("keyspace_name")
-        val strategy_options = row.getString("strategy_options")
-        println(s"$keyspace_name $strategy_options")
-      })
-
-    } catch {
-      case e: Exception => println("Got this unknown exception: " + e)
-    }
+  def connectCassandra() = {
+    CassandraUtils.connect(cassandraInets, cassandraPort)
   }
 
-  def main(args: Array[String]) {
-    //val keyspace = "system"
-
-    //demo()
-    DatabaseOperations.insertRawWebEvent(1, 1, 1, 1, 1, UUIDs.timeBased(), 1, 1, "1", "1", "1", 1, 1, "1", 1, "1", "1")
-
+  def connectSpark() = {
+    val applicationName = ApplicationSettings.ApplicationConfig.applicationName
+    val sparkHost = ApplicationSettings.SparkConfig.sparkHost
+    val sparkPort = ApplicationSettings.SparkConfig.sparkPort
+    val cassandraHost = cassandraNodes.get(0)
+    SparkUtils.createSparkSession(applicationName, sparkHost, sparkPort, cassandraHost)
   }
+
 }

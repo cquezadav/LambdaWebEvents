@@ -13,14 +13,14 @@ libraryDependencies ++=Seq(
     "com.google.code.gson" 			% 	"gson" 								% 	"2.3.1",
     "org.apache.spark" 				%% 	"spark-core" 						% 	"2.0.2" 	%	"provided",
     "org.apache.spark" 				%% 	"spark-sql" 						% 	"2.0.2",
+    "org.apache.spark" 				%% 	"spark-streaming" 					% 	"2.0.2",
     "com.datastax.spark" 			% 	"spark-cassandra-connector_2.11" 	% 	"2.0.0-M3"
 )
 
+// avoid guava conflict 
 assemblyShadeRules in assembly := Seq(
   ShadeRule.rename("com.google.**" -> "shadeio.@1").inAll
 )
-
-//assemblyJarName in assembly := s"${name.value}-${version.value}.jar"
 
 assemblyMergeStrategy in assembly := {
   case PathList("META-INF", xs @ _*) => MergeStrategy.discard

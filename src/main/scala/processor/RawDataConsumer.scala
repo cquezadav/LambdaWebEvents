@@ -9,14 +9,14 @@ import scala.collection.JavaConversions.iterableAsScalaIterable
 
 import org.apache.kafka.clients.consumer.ConsumerConfig
 import org.apache.kafka.clients.consumer.KafkaConsumer
+import org.joda.time.DateTime
+
+import com.datastax.driver.core.utils.UUIDs
+import com.google.gson.Gson
 
 import config.ApplicationSettings
-import com.google.gson.Gson
-import domain.WebEventMessage
-import org.joda.time.DateTime
-import com.datastax.driver.core.utils.UUIDs
-import utils.CassandraUtils
 import config.InitializeApplication
+import domain.WebEventMessage
 
 class RawDataConsumer {
 

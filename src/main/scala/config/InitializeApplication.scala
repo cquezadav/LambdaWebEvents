@@ -6,6 +6,7 @@ import scala.collection.JavaConversions.asScalaBuffer
 
 import utils.CassandraUtils
 import utils.SparkUtils
+import org.apache.spark.streaming.Seconds
 
 object InitializeApplication {
 
@@ -23,6 +24,14 @@ object InitializeApplication {
     val sparkPort = ApplicationSettings.SparkConfig.sparkPort
     val cassandraHost = cassandraNodes.get(0)
     SparkUtils.createSparkSession(applicationName, sparkHost, sparkPort, cassandraHost)
+  }
+  
+  def connectStreaming() {
+    val applicationName = ApplicationSettings.ApplicationConfig.applicationName
+    val sparkHost = ApplicationSettings.SparkConfig.sparkHost
+    val sparkPort = ApplicationSettings.SparkConfig.sparkPort
+    val cassandraHost = cassandraNodes.get(0)
+    SparkUtils.createSparkStreaming(applicationName, sparkHost, sparkPort, cassandraHost, Seconds(1))
   }
 
 }

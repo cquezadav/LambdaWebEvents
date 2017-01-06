@@ -11,8 +11,8 @@ import com.datastax.spark.connector.toRDDFunctions
 
 import config.ApplicationSettings.SchemaConfig
 import config.InitializeApplication
-import domain.LocationsPerHourBatch
 import utils.SparkUtils
+import domain.EventsPerLocation
 
 object Batch extends App {
 
@@ -33,14 +33,14 @@ object Batch extends App {
   def processEventsPerLocationPerHour = {
     val eventsPerLocationPerHourTable = SchemaConfig.eventsPerLocationPerHourTable
     val eventsPerLocationPerHourDF = rawDataDF.groupBy("year", "month", "day", "hour", "location").count()
-    val eventsPerLocationPerHourRDD: RDD[LocationsPerHourBatch] = eventsPerLocationPerHourDF.rdd.map { x: Row =>
+    val eventsPerLocationPerHourRDD = eventsPerLocationPerHourDF.rdd.map { x: Row =>
       val year = x.getAs[Int]("year")
       val month = x.getAs[Int]("month")
       val day = x.getAs[Int]("day")
       val hour = x.getAs[Int]("hour")
       val location = x.getAs[String]("location")
       val count = x.getAs[Long]("count")
-      LocationsPerHourBatch(year, Some(month), Some(day), Some(hour), location, count)
+      EventsPerLocation(year, Some(month), Some(day), Some(hour), location, count)
     }
 
     eventsPerLocationPerHourRDD.saveToCassandra(keyspace, eventsPerLocationPerHourTable, SomeColumns("year", "month", "day", "hour", "location", "count"))
@@ -49,13 +49,13 @@ object Batch extends App {
   def processEventsPerLocationPerDay = {
     val eventsPerLocationPerDayTable = SchemaConfig.eventsPerLocationPerDayTable
     val eventsPerLocationPerDayDF = rawDataDF.groupBy("year", "month", "day", "location").count()
-    val eventsPerLocationPerDayRDD: RDD[LocationsPerHourBatch] = eventsPerLocationPerDayDF.rdd.map { x: Row =>
+    val eventsPerLocationPerDayRDD = eventsPerLocationPerDayDF.rdd.map { x: Row =>
       val year = x.getAs[Int]("year")
       val month = x.getAs[Int]("month")
       val day = x.getAs[Int]("day")
       val location = x.getAs[String]("location")
       val count = x.getAs[Long]("count")
-      LocationsPerHourBatch(year, Some(month), Some(day), None, location, count)
+      EventsPerLocation(year, Some(month), Some(day), None, location, count)
     }
 
     eventsPerLocationPerDayRDD.saveToCassandra(keyspace, eventsPerLocationPerDayTable, SomeColumns("year", "month", "day", "location", "count"))
@@ -64,12 +64,12 @@ object Batch extends App {
   def processEventsPerLocationPerMonth = {
     val eventsPerLocationPerMonthTable = SchemaConfig.eventsPerLocationPerMonthTable
     val eventsPerLocationPerMonthDF = rawDataDF.groupBy("year", "month", "location").count()
-    val eventsPerLocationPerMonthRDD: RDD[LocationsPerHourBatch] = eventsPerLocationPerMonthDF.rdd.map { x: Row =>
+    val eventsPerLocationPerMonthRDD = eventsPerLocationPerMonthDF.rdd.map { x: Row =>
       val year = x.getAs[Int]("year")
       val month = x.getAs[Int]("month")
       val location = x.getAs[String]("location")
       val count = x.getAs[Long]("count")
-      LocationsPerHourBatch(year, Some(month), None, None, location, count)
+      EventsPerLocation(year, Some(month), None, None, location, count)
     }
 
     eventsPerLocationPerMonthRDD.saveToCassandra(keyspace, eventsPerLocationPerMonthTable, SomeColumns("year", "month", "location", "count"))
@@ -78,12 +78,12 @@ object Batch extends App {
   def processEventsPerLocationPerYear = {
     val eventsPerLocationPerYearTable = SchemaConfig.eventsPerLocationPerYearTable
     val eventsPerLocationPerYearDF = rawDataDF.groupBy("year", "month", "location").count()
-    val eventsPerLocationPerYearRDD: RDD[LocationsPerHourBatch] = eventsPerLocationPerYearDF.rdd.map { x: Row =>
+    val eventsPerLocationPerYearRDD = eventsPerLocationPerYearDF.rdd.map { x: Row =>
       val year = x.getAs[Int]("year")
       val month = x.getAs[Int]("month")
       val location = x.getAs[String]("location")
       val count = x.getAs[Long]("count")
-      LocationsPerHourBatch(year, Some(month), None, None, location, count)
+      EventsPerLocation(year, Some(month), None, None, location, count)
     }
 
     eventsPerLocationPerYearRDD.saveToCassandra(keyspace, eventsPerLocationPerYearTable, SomeColumns("year", "location", "count"))

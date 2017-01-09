@@ -19,10 +19,11 @@ object ApplicationSettings {
     private val schemaConfig = rootConfig.getConfig("schema")
     lazy val keyspace = schemaConfig.getString("keyspace")
     lazy val rawEventsDataTable = schemaConfig.getString("rawEventsDataTable")
-    lazy val eventsPerLocationPerHourTable = schemaConfig.getString("eventsPerLocationPerHourTable")
-    lazy val eventsPerLocationPerDayTable = schemaConfig.getString("eventsPerLocationPerDayTable")
-    lazy val eventsPerLocationPerMonthTable = schemaConfig.getString("eventsPerLocationPerMonthTable")
-    lazy val eventsPerLocationPerYearTable = schemaConfig.getString("eventsPerLocationPerYearTable")
+    lazy val eventsPerLocationPerHourBatchTable = schemaConfig.getString("eventsPerLocationPerHourBatchTable")
+    lazy val eventsPerLocationPerHourSpeedTable = schemaConfig.getString("eventsPerLocationPerHourSpeedTable")
+    lazy val eventsPerLocationPerDayBatchTable = schemaConfig.getString("eventsPerLocationPerDayBatchTable")
+    lazy val eventsPerLocationPerMonthBatchTable = schemaConfig.getString("eventsPerLocationPerMonthBatchTable")
+    lazy val eventsPerLocationPerYearBatchTable = schemaConfig.getString("eventsPerLocationPerYearBatchTable")
   }
 
   object KafkaConfig {

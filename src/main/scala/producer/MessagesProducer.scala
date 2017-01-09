@@ -34,7 +34,8 @@ object MessagesProducer extends App {
     println(messageJson)
     val producerRecord = new ProducerRecord(topic, messageJson)
     kafkaProducer.send(producerRecord)
-    Thread.sleep(random.nextInt(50))
+    //Thread.sleep(random.nextInt(50))
+    Thread.sleep(1000)
   }
 
 }

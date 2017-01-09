@@ -31,6 +31,16 @@ count bigint,
 PRIMARY KEY (year, month, day, hour, location)
 );
 
+CREATE TABLE web_events_analysis.events_per_location_per_hour_speed (
+year int,
+month int,
+day int,
+hour int,
+location text,
+count bigint,
+PRIMARY KEY (year, month, day, hour, location)
+);
+
 CREATE TABLE web_events_analysis.events_per_location_per_day_batch (
 year int,
 month int,
